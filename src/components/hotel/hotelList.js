@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Image, StyleSheet, TextInput } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Image, StyleSheet, TextInput, AsyncStorage } from "react-native";
 import {
   Container,
   Header,
@@ -19,17 +20,37 @@ export default class CardImageExample extends Component {
   state = {
     product: [],
     text: "",
-    array: []
+    array: [],
+    isReady: false
   };
 
-  componentDidMount() {
-    fetch("https://apihotel-v1-rest.herokuapp.com/hotels")
-      .then(response => response.json())
-      .then(result => this.setState({ array: result, product: result }));
+  async componentDidMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      ...Ionicons.font
+    });
+    this.setState({ isReady: true });
   }
 
-  login = () => {
-    this.props.navigation.navigate("Login");
+componentDidMount() {
+  fetch("https://apihotel-v1-rest.herokuapp.com/hotels")
+      .then(response => response.json())
+      .then(result => this.setState({ array: result, product: result }));
+}
+
+  detail = id => {
+    this.save(id);
+    this.props.navigation.navigate("Detail");
+  };
+
+  save = async id => {
+    let ident = this.state.array.filter(arr => arr.id == id);;
+    try {
+    await AsyncStorage.setItem("data", JSON.stringify(ident));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   filter = text => {
@@ -42,37 +63,28 @@ export default class CardImageExample extends Component {
       return itemData.indexOf(textData) > -1;
     });
     this.setState({
-      product: this.state.text != '' ? newData : this.state.array
+      product: this.state.text != "" ? newData : this.state.array
     });
-    console.log(this.state.product);
-    
   };
 
   render() {
     return (
       <Container>
         <Header searchBar rounded style={styles.header}>
-          <Left>
-            <Button transparent onPress={this.login}>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
           <Item>
             <Icon name="ios-search" />
             <TextInput
               value={this.state.text}
               placeholder="Type here to translate!"
-              onChangeText={
-                text => this.filter(text)
-              }
+              onChangeText={text => this.filter(text)}
               value={this.state.text}
             />
           </Item>
         </Header>
         <Content>
-          {this.state.product.map(arr => (
-            <Card>
-              <CardItem cardBody>
+        {this.state.product.map(arr => (
+            <Card key={arr.id} style={styles.card}>
+              <CardItem cardBody onPress={this.login}>
                 <Image
                   source={{ uri: arr.image }}
                   style={{ height: 200, width: null, flex: 1 }}
@@ -94,6 +106,9 @@ export default class CardImageExample extends Component {
                   <Text style={styles.textColor}>ARS {arr.price}</Text>
                 </Right>
               </CardItem>
+              <Button onPress={() => this.detail(arr.id)}>
+                <Text style={styles.textCenter}>Más información</Text>
+              </Button>
             </Card>
           ))}
         </Content>
@@ -107,7 +122,14 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   textColor: {
-    color: 'orange',
+    color: "orange",
     fontSize: 15
+  },
+  card: {
+    marginTop: 30
+  },
+  textCenter: {
+    textAlign: "center",
+    width: "100%"
   }
-});
+}); 
