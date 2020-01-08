@@ -1,7 +1,6 @@
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-
 import React, { Component } from "react";
 
 export default class FloatingLabelExample extends Component {
@@ -19,10 +18,6 @@ export default class FloatingLabelExample extends Component {
       ...Ionicons.font
     });
     this.setState({ isReady: true });
-  }
-
-  register = () => {
-      this.props.navigation.navigate('Register')
   }
 
   hotel = () => {

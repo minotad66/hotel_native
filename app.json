@@ -25,6 +25,12 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "android": {
+      "package": "com.codingmechanic.mapcuny",
+      "config": {
+         "googleMaps": { "apiKey": "AIzaSyD73KMtckgUm5uppOr_PMObOgASTkXhBW0" }   
+      }
+   }
   }
 }
