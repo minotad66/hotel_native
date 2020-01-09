@@ -2,15 +2,15 @@
 
 Para instalar este proyecto, debe descargarlo o clonarlo desde este repositorio.
 
-## https://github.com/minotad66/apihotel.git
+### https://github.com/minotad66/apihotel.git
 
 En el directorio del proyecto, ejecutar:
 
-## npm install
+### npm install
 
 Ejecutar el proyecto con: 
 
-## expo start
+### expo start
 
 Se abrira el navegador expo.
 
